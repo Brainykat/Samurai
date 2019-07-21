@@ -24,13 +24,24 @@ namespace Samurai.Data
 			return await _context.SaveChangesAsync();
 		}
 		public async Task<Domain.Samurai> GetSamurai(int id) => await _context.Samurais.FindAsync(id);
-		public async Task<Domain.Samurai> GetSamuraiDetails(int id) => await _context.Samurais
-			.Include(q => q.Quotes)
-			.Include(r => r.SecretIdentity)
-			//.Include(s => s.SamuraiBattles)
-			.FirstOrDefaultAsync(k => k.Id == id);
+		public async Task<Domain.Samurai> GetSamuraiDetails(int id)
+		{
+			var m = _context.Samurais.Include(j => j.Name).ToList();
+			var n = _context.Samurais.Include(j => j.Salary).ToList();
+			return await _context.Samurais
+			  .Include(q => q.Quotes)
+			  .Include(r => r.SecretIdentity)
+			  //.Include(s => s.SamuraiBattles)
+			  .FirstOrDefaultAsync(k => k.Id == id);
+		}
 
-		public async Task<List<Domain.Samurai>> GetSamurais() => await _context.Samurais.Include(j => j.Quotes).ToListAsync();
+		public async Task<List<Domain.Samurai>> GetSamurais()
+		{
+			var m = _context.Samurais.Include(j => j.Name).ToList();
+			var n = _context.Samurais.Include(j => j.Salary).ToList();
+			var b = await _context.Samurais.Include(j => j.Quotes).ToListAsync();
+			return b;
+		}
 
 		public async Task<int> AddQuote(Quote quote)
 		{

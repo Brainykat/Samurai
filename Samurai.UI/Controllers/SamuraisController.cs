@@ -41,11 +41,11 @@ namespace Samurai.UI.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(Domain.Samurai samurai)
+		public async Task<IActionResult> Create(Domain.Samurai samurai, string currency, decimal amount)
 		{
 			if (ModelState.IsValid)
 			{
-				samurai.Salary = Money.Create(samurai.Salary.Currency, samurai.Salary.Amount, DateTime.UtcNow);
+				samurai.Salary = Money.Create(currency, amount, DateTime.UtcNow);
 				await _samuraiRepository.AddSamurai(samurai);
 				return RedirectToAction(nameof(Index));
 			}
