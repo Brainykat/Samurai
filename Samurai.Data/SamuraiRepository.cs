@@ -23,7 +23,7 @@ namespace Samurai.Data
 		public async Task<Domain.Samurai> GetSamuraiDetails(int id) =>
 			await _context.Samurais.Include(q => q.Quotes).FirstOrDefaultAsync(k => k.Id == id);
 
-		public async Task<List<Domain.Samurai>> GetSamurais() => await _context.Samurais.ToListAsync();
+		public async Task<List<Domain.Samurai>> GetSamurais() => await _context.Samurais.Include(j=>j.Quotes).ToListAsync();
 
 		public async Task<int> AddQuote(Quote quote)
 		{
