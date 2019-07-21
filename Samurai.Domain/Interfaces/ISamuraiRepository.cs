@@ -7,7 +7,7 @@ namespace Samurai.Domain.Interfaces
 {
 	public interface ISamuraiRepository
 	{
-		Task<int> AddSamurai(Samurai samurai);
+		Task<int> AddSamurai(Samurai samurai, string user = null);
 		Task<List<Samurai>> GetSamurais();
 		Task<Samurai> GetSamurai(int id);
 		Task<List<Quote>> GetQuotes();

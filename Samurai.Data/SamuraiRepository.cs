@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Samurai.Domain;
 using Samurai.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +15,12 @@ namespace Samurai.Data
 		{
 			_context = context;
 		}
-		public async Task<int> AddSamurai(Domain.Samurai samurai)
+		public async Task<int> AddSamurai(Domain.Samurai samurai, string user = null)
 		{
 			_ = await _context.Samurais.AddAsync(samurai);
+			//_context.Entry(samurai).Property("Created").CurrentValue = DateTime.UtcNow;
+			//_context.Entry(samurai).Property("LastModified").CurrentValue = DateTime.UtcNow;
+			//_context.Entry(samurai).Property("CreatedBy").CurrentValue = user;
 			return await _context.SaveChangesAsync();
 		}
 		public async Task<Domain.Samurai> GetSamurai(int id) => await _context.Samurais.FindAsync(id);
@@ -56,5 +60,11 @@ namespace Samurai.Data
 
 		public async Task<List<SamuraiBattle>> GetBattles(int samuraiId) => (await _context.Samurais.Include(g => g.SamuraiBattles)
 				.ThenInclude(h => h.Battle).FirstOrDefaultAsync(s => s.Id == samuraiId)).SamuraiBattles;
+
+		public void QueryShadowProperty()
+		{
+			var time = DateTime.UtcNow.AddDays(-7);
+			_context.Samurais.Where(l => EF.Property<DateTime>(l, "Created") >= time).ToList();
+		}
 	}
 }
