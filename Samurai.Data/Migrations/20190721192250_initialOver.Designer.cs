@@ -10,8 +10,8 @@ using Samurai.Data;
 namespace Samurai.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    [Migration("20190720215002_relationships")]
-    partial class relationships
+    [Migration("20190721192250_initialOver")]
+    partial class initialOver
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,8 +61,6 @@ namespace Samurai.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
-
                     b.HasKey("Id");
 
                     b.ToTable("Samurais");
@@ -106,6 +104,49 @@ namespace Samurai.Data.Migrations
                         .HasForeignKey("SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Samurai.Domain.Samurai", b =>
+                {
+                    b.OwnsOne("Samurai.Domain.ValueObjects.Money", "Salary", b1 =>
+                        {
+                            b1.Property<int>("SamuraiId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<decimal>("Amount");
+
+                            b1.Property<string>("Currency");
+
+                            b1.Property<DateTime>("Time");
+
+                            b1.HasKey("SamuraiId");
+
+                            b1.ToTable("Samurais");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SamuraiId");
+                        });
+
+                    b.OwnsOne("Samurai.Domain.ValueObjects.Name", "Name", b1 =>
+                        {
+                            b1.Property<int>("SamuraiId")
+                                .ValueGeneratedOnAdd()
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                            b1.Property<string>("First");
+
+                            b1.Property<string>("Middle");
+
+                            b1.Property<string>("Sur");
+
+                            b1.HasKey("SamuraiId");
+
+                            b1.ToTable("Samurais");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SamuraiId");
+                        });
                 });
 
             modelBuilder.Entity("Samurai.Domain.SamuraiBattle", b =>

@@ -1,61 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Samurai.Data;
 using Samurai.Domain;
 using Samurai.Domain.Interfaces;
+using Samurai.Domain.ValueObjects;
+using System;
+using System.Threading.Tasks;
 
 namespace Samurai.UI.Controllers
 {
-    public class SamuraisController : Controller
-    {
-        private readonly ISamuraiRepository _samuraiRepository;
+	public class SamuraisController : Controller
+	{
+		private readonly ISamuraiRepository _samuraiRepository;
 
-        public SamuraisController(ISamuraiRepository samuraiRepository)
-        {
-            _samuraiRepository = samuraiRepository;
-        }
+		public SamuraisController(ISamuraiRepository samuraiRepository)
+		{
+			_samuraiRepository = samuraiRepository;
+		}
 
-		// GET: Samurais
 		public async Task<IActionResult> Index() => View(await _samuraiRepository.GetSamurais());
 
-		// GET: Samurais/Details/5
 		public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            var samurai = await _samuraiRepository.GetSamuraiDetails(id.Value);
-			samurai.SamuraiBattles = await _samuraiRepository.GetBattles(id.Value); 
+			var samurai = await _samuraiRepository.GetSamuraiDetails(id.Value);
+			samurai.SamuraiBattles = await _samuraiRepository.GetBattles(id.Value);
 			//There was a bug for double include hence above second trip 
-            if (samurai == null)
-            {
-                return NotFound();
-            }
+			if (samurai == null)
+			{
+				return NotFound();
+			}
 
-            return View(samurai);
-        }
+			return View(samurai);
+		}
 
-		// GET: Samurais/Create
 		public IActionResult Create() => View();
 
 		[HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Domain.Samurai samurai)
-        {
-            if (ModelState.IsValid)
-            {
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(Domain.Samurai samurai)
+		{
+			if (ModelState.IsValid)
+			{
+				samurai.Salary = Money.Create(samurai.Salary.Currency, samurai.Salary.Amount, DateTime.UtcNow);
 				await _samuraiRepository.AddSamurai(samurai);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(samurai);
-        }
+				return RedirectToAction(nameof(Index));
+			}
+			return View(samurai);
+		}
 
 		public IActionResult AddQuote() => View();
 

@@ -21,25 +21,28 @@ namespace Samurai.Data
 		{
 			modelBuilder.Entity<SamuraiBattle>()
 				.HasKey(k => new { k.SamuraiId, k.BattleId });
+			modelBuilder.Entity<Domain.Samurai>().
+				OwnsOne(L => L.Name);
+			modelBuilder.Entity<Domain.Samurai>()
+				.OwnsOne(m => m.Salary);
+
 			//Shadow properties
 			//modelBuilder.Entity<Domain.Samurai>().Property<DateTime>("Created");
-			//modelBuilder.Entity<Domain.Samurai>().Property<DateTime>("LastModified");
-			//modelBuilder.Entity<Domain.Samurai>().Property<string>("CreatedBy");
-			foreach(var entiity in modelBuilder.Model.GetEntityTypes())
-			{
-				modelBuilder.Entity(entiity.Name).Property<DateTime>("Created");
-				modelBuilder.Entity(entiity.Name).Property<DateTime>("LastModified");
-				modelBuilder.Entity(entiity.Name).Property<string>("CreatedBy");
-			}
+			//foreach (var entity in modelBuilder.Model.GetEntityTypes())
+			//{
+			//	modelBuilder.Entity(entity.Name).Property<DateTime>("Created");
+			//	modelBuilder.Entity(entity.Name).Property<DateTime>("LastModified");
+			//	modelBuilder.Entity(entity.Name).Property<string>("CreatedBy");
+			//}
 		}
 		public override int SaveChanges()
 		{
-			MyOverride();
+			//MyOverride();
 			return base.SaveChanges();
 		}
 		public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
 		{
-			MyOverride();
+			//MyOverride();
 			return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 		}
 		public void MyOverride()
@@ -48,7 +51,8 @@ namespace Samurai.Data
 			ChangeTracker.DetectChanges();
 			var time = DateTime.UtcNow;
 			foreach (var entry in ChangeTracker.Entries()
-				.Where(c => c.State == EntityState.Added || c.State == EntityState.Modified))
+				.Where(c => (c.State == EntityState.Added || c.State == EntityState.Modified)
+				&& !c.Metadata.IsOwned()))
 			{
 				entry.Property("LastModified").CurrentValue = time;
 				if (entry.State == EntityState.Added)

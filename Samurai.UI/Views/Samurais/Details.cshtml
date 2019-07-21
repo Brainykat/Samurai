@@ -11,10 +11,14 @@
 			@Html.DisplayNameFor(model => model.Name)
 		</th>
 		<th>@Html.DisplayNameFor(model => model.SecretIdentity.RealName)</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Salary)
+		</th>
 	</tr>
 	<tr>
-		<td>@Html.DisplayFor(model => model.Name)</td>
+		<td>@Html.DisplayFor(model => model.Name.FullName)</td>
 		<td>@Html.DisplayFor(model => model.SecretIdentity.RealName)</td>
+		<td>@Html.DisplayFor(model => model.Salary.GetSalary)</td>
 	</tr>
 </table>
 <hr />
