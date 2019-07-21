@@ -32,6 +32,8 @@ namespace Samurai.UI.Controllers
             }
 
             var samurai = await _samuraiRepository.GetSamuraiDetails(id.Value);
+			samurai.SamuraiBattles = await _samuraiRepository.GetBattles(id.Value); 
+			//There was a bug for double include hence above second trip 
             if (samurai == null)
             {
                 return NotFound();
@@ -45,7 +47,7 @@ namespace Samurai.UI.Controllers
 
 		[HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Domain.Samurai samurai)
+        public async Task<IActionResult> Create(Domain.Samurai samurai)
         {
             if (ModelState.IsValid)
             {
@@ -56,6 +58,20 @@ namespace Samurai.UI.Controllers
         }
 
 		public IActionResult AddQuote() => View();
+
+		public async Task<IActionResult> AddToBattle()
+		{
+			ViewData["SamuraiId"] = new SelectList(await _samuraiRepository.GetSamurais(), "Id", "Name");
+			ViewData["BattleId"] = new SelectList(await _samuraiRepository.GetBattles(), "Id", "Name");
+			return View();
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> AddToBattle(SamuraiBattle samuraiBattle)
+		{
+			await _samuraiRepository.AddSamuraiBattle(samuraiBattle);
+			return RedirectToAction(nameof(Details), new { id = samuraiBattle.SamuraiId });
+		}
 		//[HttpPost]
 		//[ValidateAntiForgeryToken]
 		//public async Task<IActionResult> AddQuote()

@@ -14,5 +14,10 @@ namespace Samurai.Domain.Interfaces
 		Task<List<Quote>> GetQuotes(int samuraiId);
 		Task<int> AddQuote(Quote quote);
 		Task<Samurai> GetSamuraiDetails(int id);
+		Task<int> AddBattle(Battle battle);
+		Task<List<Battle>> GetBattles();
+		Task<List<SamuraiBattle>> GetBattles(int samuraiId);
+		Task<Battle> GetBattle(int id);
+		Task AddSamuraiBattle(SamuraiBattle samuraiBattle);
 	}
 }
