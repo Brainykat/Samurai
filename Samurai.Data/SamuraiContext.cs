@@ -58,7 +58,6 @@ namespace Samurai.Data
 				if (entry.State == EntityState.Added)
 				{
 					entry.Property("Created").CurrentValue = time;
-					entry.Property("Created").CurrentValue = time;
 					entry.Property("CreatedBy").CurrentValue = null;
 				}
 			}

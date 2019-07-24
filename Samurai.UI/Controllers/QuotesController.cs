@@ -29,7 +29,7 @@ namespace Samurai.UI.Controllers
 		// GET: Quotes/Create
 		public async Task<IActionResult> Create()
         {
-            ViewData["SamuraiId"] = new SelectList(await _samuraiRepository.GetSamurais(), "Id", "Name");
+            ViewData["SamuraiId"] = new SelectList(await _samuraiRepository.GetSamurais(), "Id", "Name.FullName");
             return View();
         }
 

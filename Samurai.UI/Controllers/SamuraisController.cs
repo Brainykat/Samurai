@@ -56,7 +56,7 @@ namespace Samurai.UI.Controllers
 
 		public async Task<IActionResult> AddToBattle()
 		{
-			ViewData["SamuraiId"] = new SelectList(await _samuraiRepository.GetSamurais(), "Id", "Name");
+			ViewData["SamuraiId"] = new SelectList(await _samuraiRepository.GetSamurais(), "Id", "Name.FullName");
 			ViewData["BattleId"] = new SelectList(await _samuraiRepository.GetBattles(), "Id", "Name");
 			return View();
 		}
