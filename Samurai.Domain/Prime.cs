@@ -8,10 +8,10 @@ namespace Samurai.Domain
 	{
 		public void PrimeOnes(int start, int end)
 		{
-			int n = 101; bool k = true;
-			for (int i = 2; i <= n; i++)
+			bool k = true;
+			for (int i = start; i <= end; i++)
 			{
-				for (int j = 2; j < i; j++)
+				for (int j = start; j < i; j++)
 				{
 					if (i % j == 0)
 					{
